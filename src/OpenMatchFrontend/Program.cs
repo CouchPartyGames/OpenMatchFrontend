@@ -1,5 +1,6 @@
 using GameFrontend.Endpoints;
 using GameFrontend.OpenMatch;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Http.Resilience;
 using OpenTelemetry.Metrics;
 using Serilog;
@@ -11,11 +12,19 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+
 builder.Host.UseSerilog();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.AddHttpLogging(o =>
+{
+    o.LoggingFields = HttpLoggingFields.All;
+    o.CombineLogs = true;
+});
 builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
 {
     var address = builder.Configuration["OPENMATCH_FRONTEND_HOST"] ??
@@ -47,7 +56,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
     cancellation.Cancel();
 });
 
-app.UseSerilogRequestLogging();
+app.UseHttpLogging();
 app.MapHealthChecks("/health");
 app.MapPrometheusScrapingEndpoint();
 app.MapAuthenticationEndpoints();
