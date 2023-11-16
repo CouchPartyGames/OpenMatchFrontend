@@ -38,8 +38,10 @@ builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
 builder.Services.AddOpenTelemetry()
     .WithMetrics(x =>
     {
+        x.AddMeter("Microsoft.AspNetCore.Hosting", 
+            "Microsoft.AspNetCore.Server.Kestrel",
+            "System.Net.Http");
         x.AddPrometheusExporter();
-        x.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
     });
 
 var app = builder.Build();
