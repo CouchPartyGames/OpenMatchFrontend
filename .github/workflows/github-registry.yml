@@ -35,6 +35,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish and push the container image
-		working-directory: src/OpenMatchFrontend
+        working-directory: ./src/OpenMatchFrontend
         run: |
           dotnet publish --os linux --arch x64 -c Release /p:PublishProfile=github
