@@ -52,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Graceful Termination for Kubernetes
 CancellationTokenSource cancellation = new();
 app.Lifetime.ApplicationStopping.Register(() =>
 {
