@@ -5,10 +5,10 @@ on:
   workflow_dispatch:
   # trigger workflow on push to master when changes happen in one folder
   push:
-    branches:
-      - main
-    paths:
-      - 'PublishGitHubAction/**'
+    tags:        
+      - '*'
+    #branches:
+    #  - main
 
 jobs:
   publish:
@@ -21,6 +21,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set output
+        id: tag
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -37,4 +41,4 @@ jobs:
       - name: Publish and push the container image
         working-directory: ./src/OpenMatchFrontend
         run: |
-          dotnet publish --os linux --arch x64 -c Release /p:PublishProfile=github
+          dotnet publish --os linux --arch x64 -c Release /p:PublishProfile=github /p:ContainerImageTags="latest;0.0.3"
