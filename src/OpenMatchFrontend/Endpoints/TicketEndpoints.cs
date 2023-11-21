@@ -1,3 +1,5 @@
+using Google.Protobuf.Collections;
+
 namespace GameFrontend.Endpoints;
 
 using GameFrontend.OpenMatch;
@@ -6,7 +8,6 @@ public static class TicketEndpoints
 {
     public static void MapTicketEndpoints(this IEndpointRouteBuilder app)
     {
-        
         app.MapPost("/v1/tickets", Create);
         app.MapGet("/v1/tickets/{id}", GetTicket);
         app.MapDelete("/v1/tickets/{id}", DeleteTicket);
@@ -26,6 +27,7 @@ public static class TicketEndpoints
 
        
         var response = await client.CreateTicketAsync(request);
+        Console.WriteLine(response);
         
         return TypedResults.Ok();
     }

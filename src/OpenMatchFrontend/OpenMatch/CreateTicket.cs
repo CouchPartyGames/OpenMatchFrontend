@@ -40,23 +40,23 @@ public sealed class CreateTicket
     public sealed class CreateTicketBuilder
     {
         private Ticket _ticket = new();
+        private SearchFields _searchFields = new();
 
         public CreateTicketBuilder AddTag(TagEntry tag)
         {
-            _ticket.SearchFields.Tags.Add(tag.Value);
+            _searchFields.Tags.Add(tag.Value);
             return this;
         }
 
         public CreateTicketBuilder AddDouble(DoubleEntry doubleEntry)
         {
-            _ticket.SearchFields.DoubleArgs.Add(doubleEntry.Key, doubleEntry.Value);
+            _searchFields.DoubleArgs.Add(doubleEntry.Key, doubleEntry.Value);
             return this;
         }
 
         public CreateTicketBuilder AddString(StringEntry stringEntry)
         {
-            
-            _ticket.SearchFields.StringArgs.Add(stringEntry.Key, stringEntry.Value);
+            _searchFields.StringArgs.Add(stringEntry.Key, stringEntry.Value);
             return this;
         }
 
@@ -69,8 +69,12 @@ public sealed class CreateTicket
         {
             return this;
         }
-        
-        public Ticket Build() => _ticket;
+
+        public Ticket Build()
+        {
+            _ticket.SearchFields = _searchFields;
+            return _ticket;
+        } 
     }
 
     public sealed record TagEntry(string Value);
