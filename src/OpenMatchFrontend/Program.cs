@@ -2,6 +2,7 @@ using GameFrontend.Endpoints;
 using GameFrontend.OpenMatch;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Http.Resilience;
+using OpenMatchFrontend.Exceptions;
 using OpenTelemetry.Metrics;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -16,6 +17,7 @@ var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 //builder.Logging.AddConsole();
 
 builder.Host.UseSerilog();
+builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
