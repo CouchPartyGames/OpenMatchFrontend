@@ -3,6 +3,7 @@ using GameFrontend.OpenMatch;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Http.Resilience;
 using OpenMatchFrontend.Exceptions;
+using OpenMatchFrontend.Exceptions;
 using OpenTelemetry.Metrics;
 using Serilog;
 using Serilog.Formatting.Compact;
