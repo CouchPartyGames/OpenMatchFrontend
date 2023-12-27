@@ -32,6 +32,12 @@ builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
     o.Address = new Uri(address);
 }).ConfigureChannel(o =>
 {
+    o.HttpHandler = new SocketsHttpHandler()
+    {
+        KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+        KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+        EnableMultipleHttp2Connections = true
+    };
     o.MaxRetryAttempts = 4;
 }).AddStandardResilienceHandler();
 
