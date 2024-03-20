@@ -5,6 +5,8 @@ using Microsoft.Extensions.Http.Resilience;
 using OpenMatchFrontend.Exceptions;
 using OpenMatchFrontend.Exceptions;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Formatting.Compact;
 
@@ -44,13 +46,31 @@ builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
     o.MaxRetryAttempts = 4;
 }).AddStandardResilienceHandler();
 
+
+var resoureBuilder = ResourceBuilder.CreateDefault().AddService("OpenMatchFrontend");
 builder.Services.AddOpenTelemetry()
-    .WithMetrics(x =>
+    .WithTracing(traceBuilder =>
     {
-        x.AddMeter("Microsoft.AspNetCore.Hosting", 
-            "Microsoft.AspNetCore.Server.Kestrel",
-            "System.Net.Http");
-        x.AddPrometheusExporter();
+        traceBuilder.SetResourceBuilder(resoureBuilder);
+        traceBuilder.SetSampler(new TraceIdRatioBasedSampler(0.1));
+
+        traceBuilder.AddOtlpExporter(opts =>
+        {
+            opts.Endpoint = new Uri("http://otel");
+        });
+        /*traceBuilder.AddGrpcClientInstrumentation(options =>
+        {
+            options.
+        });*/
+    })
+    .WithMetrics(metricBuilder =>
+    {
+        metricBuilder.SetResourceBuilder(resoureBuilder);
+        metricBuilder
+            .AddRuntimeInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation();
+        metricBuilder.AddPrometheusExporter();
     });
 
 var app = builder.Build();
@@ -68,6 +88,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
     cancellation.Cancel();
 });
 
+app.UseExceptionHandler(options => { });
 app.UseHttpLogging();
 app.MapHealthChecks("/health");
 app.MapPrometheusScrapingEndpoint();
