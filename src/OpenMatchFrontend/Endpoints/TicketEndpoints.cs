@@ -32,8 +32,11 @@ public static class TicketEndpoints
         return TypedResults.Ok();
     }
 
-    static async Task<Results<Ok, NotFound>> GetTicket(string id)
+    static async Task<Results<Ok, NotFound>> GetTicket(string id, FrontendService.FrontendServiceClient client)
     {
+
+        //var response = await client.GetTicket();
+        //Console.WriteLine(response);
         return TypedResults.Ok();
     }
 
