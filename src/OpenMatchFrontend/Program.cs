@@ -1,25 +1,25 @@
 using GameFrontend.Endpoints;
 using GameFrontend.OpenMatch;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.Http.Resilience;
 using OpenMatchFrontend.Exceptions;
-using OpenMatchFrontend.Exceptions;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Serilog;
-using Serilog.Formatting.Compact;
-
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console(new CompactJsonFormatter())
-    .CreateLogger();
 
 var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 
-//builder.Logging.ClearProviders();
-//builder.Logging.AddConsole();
-
-builder.Host.UseSerilog();
+builder.Logging.ClearProviders();
+builder.Logging.AddOpenTelemetry(opts =>
+{
+    opts.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Frontend"));
+    opts.AddOtlpExporter(export =>
+    {
+        export.Endpoint = new Uri("http://localhost:4317");
+        export.Protocol = OtlpExportProtocol.HttpProtobuf;
+    });
+});
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
@@ -47,30 +47,34 @@ builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
 }).AddStandardResilienceHandler();
 
 
-var resoureBuilder = ResourceBuilder.CreateDefault().AddService("OpenMatchFrontend");
+var resourceBuilder = ResourceBuilder.CreateDefault().AddService("OpenMatchFrontend");
 builder.Services.AddOpenTelemetry()
     .WithTracing(traceBuilder =>
     {
-        traceBuilder.SetResourceBuilder(resoureBuilder);
-        traceBuilder.SetSampler(new TraceIdRatioBasedSampler(0.1));
+        traceBuilder.SetResourceBuilder(resourceBuilder);
+        traceBuilder.SetSampler(new TraceIdRatioBasedSampler(1.0));
+        traceBuilder.AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddGrpcClientInstrumentation();
 
         traceBuilder.AddOtlpExporter(opts =>
         {
-            opts.Endpoint = new Uri("http://otel");
+            opts.Endpoint = new Uri("http://localhost:4317");
+            opts.Protocol = OtlpExportProtocol.HttpProtobuf;
         });
-        /*traceBuilder.AddGrpcClientInstrumentation(options =>
-        {
-            options.
-        });*/
     })
     .WithMetrics(metricBuilder =>
     {
-        metricBuilder.SetResourceBuilder(resoureBuilder);
+        metricBuilder.SetResourceBuilder(resourceBuilder);
         metricBuilder
             .AddRuntimeInstrumentation()
             .AddHttpClientInstrumentation()
             .AddAspNetCoreInstrumentation();
-        metricBuilder.AddPrometheusExporter();
+        metricBuilder.AddOtlpExporter(export =>
+        {
+            export.Endpoint = new Uri("http://localhost:4317");
+            export.Protocol = OtlpExportProtocol.HttpProtobuf;
+        });
     });
 
 var app = builder.Build();
@@ -91,7 +95,6 @@ app.Lifetime.ApplicationStopping.Register(() =>
 app.UseExceptionHandler(options => { });
 app.UseHttpLogging();
 app.MapHealthChecks("/health");
-app.MapPrometheusScrapingEndpoint();
 app.MapAuthenticationEndpoints();
 app.MapTicketEndpoints();
 

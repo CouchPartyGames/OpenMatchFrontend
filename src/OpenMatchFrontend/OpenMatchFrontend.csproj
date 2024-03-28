@@ -20,7 +20,7 @@
     <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.7.0-alpha.1" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.7.0-beta.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
     <PackageReference Include="Serilog" Version="3.1.1" />
@@ -31,6 +31,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interceptors\" />
+    <Folder Include="SignalR\Groups\" />
+    <Folder Include="SignalR\Hubs\Filters\" />
+    <Folder Include="SignalR\Messages\" />
   </ItemGroup>
 
 </Project>
