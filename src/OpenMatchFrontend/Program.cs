@@ -10,10 +10,11 @@ using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 
+var resourceBuilder = ResourceBuilder.CreateDefault().AddService("OpenFrontend");
 builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(opts =>
 {
-    opts.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Frontend"));
+    opts.SetResourceBuilder(resourceBuilder);
     opts.AddOtlpExporter(export =>
     {
         export.Endpoint = new Uri("http://localhost:4317");
@@ -46,8 +47,6 @@ builder.Services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
     o.MaxRetryAttempts = 4;
 }).AddStandardResilienceHandler();
 
-
-var resourceBuilder = ResourceBuilder.CreateDefault().AddService("OpenMatchFrontend");
 builder.Services.AddOpenTelemetry()
     .WithTracing(traceBuilder =>
     {
