@@ -1,5 +1,4 @@
 using GameFrontend.Endpoints;
-using GameFrontend.OpenMatch;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenMatchFrontend.Exceptions;
 using OpenTelemetry.Exporter;
@@ -10,7 +9,10 @@ using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 
-var resourceBuilder = ResourceBuilder.CreateDefault().AddService("OpenFrontend");
+var resourceBuilder = ResourceBuilder
+    .CreateDefault()
+    .AddService("OpenFrontend", null, "1.0.0");
+
 builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(opts =>
 {
@@ -18,7 +20,7 @@ builder.Logging.AddOpenTelemetry(opts =>
     opts.AddOtlpExporter(export =>
     {
         export.Endpoint = new Uri("http://localhost:4317");
-        export.Protocol = OtlpExportProtocol.HttpProtobuf;
+        export.Protocol = OtlpExportProtocol.Grpc;
     });
 });
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
@@ -59,7 +61,7 @@ builder.Services.AddOpenTelemetry()
         traceBuilder.AddOtlpExporter(opts =>
         {
             opts.Endpoint = new Uri("http://localhost:4317");
-            opts.Protocol = OtlpExportProtocol.HttpProtobuf;
+            opts.Protocol = OtlpExportProtocol.Grpc;
         });
     })
     .WithMetrics(metricBuilder =>
@@ -72,7 +74,7 @@ builder.Services.AddOpenTelemetry()
         metricBuilder.AddOtlpExporter(export =>
         {
             export.Endpoint = new Uri("http://localhost:4317");
-            export.Protocol = OtlpExportProtocol.HttpProtobuf;
+            export.Protocol = OtlpExportProtocol.Grpc;
         });
     });
 
