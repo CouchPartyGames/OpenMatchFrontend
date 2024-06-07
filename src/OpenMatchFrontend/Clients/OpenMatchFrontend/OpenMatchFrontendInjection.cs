@@ -6,10 +6,14 @@ public static class OpenMatchFrontendInjection
     public static IServiceCollection AddOpenMatchFrontendClient(this IServiceCollection services,
         IConfiguration configuration)
     {
+        var options = configuration
+            .GetSection(OpenMatchOptions.SectionName)
+            .Get<OpenMatchOptions>();
+        
         services.AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
         {
-            var address = configuration["OPENMATCH_FRONTEND_HOST"] ??
-                          "http://open-match-frontend.open-match.svc.cluster.local:50504";
+            var address = configuration["OPENMATCH_FRONTEND_HOST"] ?? 
+                          OpenMatchOptions.OpenMatchFrontendAddr;
             o.Address = new Uri(address);
         }).ConfigureChannel(o =>
         {
