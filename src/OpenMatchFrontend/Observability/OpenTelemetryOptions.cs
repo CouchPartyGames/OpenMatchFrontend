@@ -4,7 +4,11 @@ public sealed class OpenTelemetryOptions
 {
    public const string SectionName = "OpenTelemetry";
 
-   public string Endpoint { get; init; } = "http://localhost:4317";
+   public const string OtelDefaultEndpoint = "http://localhost:4317";
+
+   public bool Enabled { get; init; } = false;
+
+   public string Endpoint { get; init; } = OtelDefaultEndpoint;
 
    public string Protocol { get; init; } = "grpc";
 

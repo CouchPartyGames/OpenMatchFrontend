@@ -35,6 +35,7 @@
     <Folder Include="SignalR\Groups\" />
     <Folder Include="SignalR\Hubs\Filters\" />
     <Folder Include="SignalR\Messages\" />
+    <Folder Include="Utilities\" />
   </ItemGroup>
 
 </Project>
