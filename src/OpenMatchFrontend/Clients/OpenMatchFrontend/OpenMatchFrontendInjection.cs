@@ -1,4 +1,4 @@
-﻿namespace OpenMatchFrontend.Options;
+﻿namespace OpenMatchFrontend.Clients.OpenMatchFrontend;
 
 public static class OpenMatchFrontendInjection
 {

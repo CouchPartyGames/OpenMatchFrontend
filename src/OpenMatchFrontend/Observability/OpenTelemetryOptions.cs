@@ -1,4 +1,4 @@
-namespace OpenMatchFrontend.Options;
+namespace OpenMatchFrontend.Observability;
 
 public sealed class OpenTelemetryOptions
 {

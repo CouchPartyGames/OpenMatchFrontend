@@ -1,4 +1,4 @@
-namespace GameFrontend.OpenMatch;
+namespace OpenMatchFrontend.Utilities.OpenMatch;
 
 public class GetTicket
 {

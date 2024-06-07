@@ -1,6 +1,4 @@
-namespace GameFrontend.OpenMatch;
-
-using OpenMatch;
+namespace OpenMatchFrontend.Utilities.OpenMatch;
 
 public sealed class DeleteTicket
 {

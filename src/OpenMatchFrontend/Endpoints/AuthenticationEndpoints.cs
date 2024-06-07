@@ -1,4 +1,4 @@
-namespace GameFrontend.Endpoints;
+namespace OpenMatchFrontend.Endpoints;
 
 public static class AuthenticationEndpoints
 {

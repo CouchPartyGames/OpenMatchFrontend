@@ -1,8 +1,6 @@
-using Google.Protobuf.Collections;
+using OpenMatchFrontend.Utilities.OpenMatch;
 
-namespace GameFrontend.Endpoints;
-
-using GameFrontend.OpenMatch;
+namespace OpenMatchFrontend.Endpoints;
 
 public static class TicketEndpoints
 {

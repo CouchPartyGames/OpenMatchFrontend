@@ -1,9 +1,8 @@
-using GameFrontend.Endpoints;
 using Microsoft.AspNetCore.HttpLogging;
+using OpenMatchFrontend.Clients.OpenMatchFrontend;
+using OpenMatchFrontend.Endpoints;
 using OpenMatchFrontend.Exceptions;
 using OpenMatchFrontend.Observability;
-using OpenMatchFrontend.Options;
-using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 

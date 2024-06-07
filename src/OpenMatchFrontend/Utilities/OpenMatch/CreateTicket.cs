@@ -1,5 +1,5 @@
 
-namespace GameFrontend.OpenMatch;
+namespace OpenMatchFrontend.Utilities.OpenMatch;
 
 public sealed class CreateTicket
 {
