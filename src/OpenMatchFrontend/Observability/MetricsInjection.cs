@@ -10,6 +10,10 @@ public static class MetricsInjection
         IConfiguration configuration,
         ResourceBuilder resourceBuilder)
     {
+        var options = configuration
+            .GetSection(OpenTelemetryOptions.SectionName)
+            .Get<OpenTelemetryOptions>();
+        
         services.AddOpenTelemetry()
             .WithMetrics(metricBuilder =>
             {

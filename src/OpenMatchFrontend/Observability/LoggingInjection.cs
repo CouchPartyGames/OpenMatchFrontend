@@ -11,6 +11,10 @@ public static class LoggingInjection
         IConfiguration configuration,
         ResourceBuilder resourceBuilder)
     {
+        var options = configuration
+            .GetSection(OpenTelemetryOptions.SectionName)
+            .Get<OpenTelemetryOptions>();
+        
         loggingBuilder.ClearProviders();
         loggingBuilder.AddOpenTelemetry(opts =>
         {

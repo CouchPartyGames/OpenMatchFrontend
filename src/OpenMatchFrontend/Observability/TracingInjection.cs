@@ -4,12 +4,16 @@ using OpenTelemetry.Trace;
 
 namespace OpenMatchFrontend.Observability;
 
-public static class TraceInjection
+public static class TracingInjection
 { 
     public static IServiceCollection AddObservabilityTraces(this IServiceCollection services,
         IConfiguration configuration,
         ResourceBuilder resourceBuilder)
     {
+        var options = configuration
+            .GetSection(OpenTelemetryOptions.SectionName)
+            .Get<OpenTelemetryOptions>();
+        
         services.AddOpenTelemetry()
             .WithTracing(traceBuilder =>
             {

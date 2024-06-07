@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.HttpLogging;
+using OpenMatchFrontend;
 using OpenMatchFrontend.Clients.OpenMatchFrontend;
 using OpenMatchFrontend.Endpoints;
 using OpenMatchFrontend.Exceptions;
 using OpenMatchFrontend.Observability;
 
-var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
+var builder = WebApplication.CreateBuilder(args);   // .NET 8 
+//var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
 
     // Observability
 builder.Logging.AddObservabilityLogging(builder.Configuration, OtelResourceBuilder.ResourceBuilder);
@@ -43,7 +45,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
 
 app.UseExceptionHandler(options => { });
 app.UseHttpLogging();
-app.MapHealthChecks("/health");
+app.MapHealthChecks(GlobalConsts.HealthPageUri);
 
 app.MapAuthenticationEndpoints();
 app.MapTicketEndpoints();
