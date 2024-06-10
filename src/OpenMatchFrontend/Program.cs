@@ -4,6 +4,7 @@ using OpenMatchFrontend.Clients.OpenMatchFrontend;
 using OpenMatchFrontend.Endpoints;
 using OpenMatchFrontend.Exceptions;
 using OpenMatchFrontend.Observability;
+using OpenMatchFrontend.Observability.Dependency;
 
 var builder = WebApplication.CreateBuilder(args);   // .NET 8 
 //var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT

@@ -1,8 +1,9 @@
-﻿using OpenTelemetry.Exporter;
+﻿using OpenMatchFrontend.Observability.Options;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 
-namespace OpenMatchFrontend.Observability;
+namespace OpenMatchFrontend.Observability.Dependency;
 
 public static class LoggingInjection
 {
