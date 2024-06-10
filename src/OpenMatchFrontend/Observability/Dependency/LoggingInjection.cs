@@ -17,6 +17,7 @@ public static class LoggingInjection
             .Get<OpenTelemetryOptions>();
         
         loggingBuilder.ClearProviders();
+        loggingBuilder.AddConsole();
         loggingBuilder.AddOpenTelemetry(opts =>
         {
             opts.SetResourceBuilder(resourceBuilder);
