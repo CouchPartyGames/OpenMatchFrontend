@@ -6,19 +6,19 @@ namespace OpenMatchFrontend.Exceptions;
 
 public class DefaultExceptionHandler(ILogger<DefaultExceptionHandler> logger) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    private readonly ProblemDetails _problemDetails = new ProblemDetails
     {
-        logger.LogError(exception, "An unexpected error occurred");
+        Status = StatusCodes.Status500InternalServerError,
+        Title = "Internal Error"
+    };
+    
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, 
+        Exception exception, 
+        CancellationToken cancellationToken)
+    {
+        logger.LogError(exception, "An unexpected error occurred {Message}", exception.Message);
 
-        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
-        {
-            Status = (int)HttpStatusCode.InternalServerError,
-            Type = exception.GetType().Name,
-            Title = "An unexpected error occurred",
-            Detail = exception.Message,
-            Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
-        });
-
+        await httpContext.Response.WriteAsJsonAsync(_problemDetails, cancellationToken: cancellationToken);
         return true;
     }
 }

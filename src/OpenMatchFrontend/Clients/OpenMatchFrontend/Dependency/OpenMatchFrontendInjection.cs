@@ -29,10 +29,10 @@ public static class OpenMatchFrontendInjection
                 };
                 o.MaxRetryAttempts = 4;
             })
-            //.AddInterceptor<ClientLoggerInterceptor>(InterceptorScope.Client)
+            .AddInterceptor<ClientLoggerInterceptor>(InterceptorScope.Client)
             .AddStandardResilienceHandler();
-
-        //services.AddTransient<ClientLoggerInterceptor>();
+        
+        services.AddTransient<ClientLoggerInterceptor>();
         
         return services;
     }
