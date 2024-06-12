@@ -7,11 +7,15 @@ public static class TicketEndpoints
     public static void MapTicketEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/v1/tickets", Create);
+            //.RequireAuthorization();
         app.MapGet("/v1/tickets/{id}", GetTicket);
+            //.RequireAuthorization();
         app.MapDelete("/v1/tickets/{id}", DeleteTicket);
+            //.RequireAuthorization();
     }
 
-    static async Task<Results<Ok, NotFound>> Create(FrontendService.FrontendServiceClient client)
+    static async Task<Results<Ok<string>, NotFound>> Create(FrontendService.FrontendServiceClient client,
+        CancellationToken token)
     {
         var ticket = new CreateTicket.CreateTicketBuilder()
             .AddDouble(new CreateTicket.DoubleEntry("latency", 32.0))
@@ -24,18 +28,24 @@ public static class TicketEndpoints
             .Build();
 
        
-        var response = await client.CreateTicketAsync(request);
+        var response = await client.CreateTicketAsync(request, cancellationToken: token);
         Console.WriteLine(response);
         
-        return TypedResults.Ok();
+        return TypedResults.Ok(response.Id);
     }
 
-    static async Task<Results<Ok, NotFound>> GetTicket(string id, FrontendService.FrontendServiceClient client)
+    static async Task<Results<Ok<Ticket>, NotFound>> GetTicket(string id, 
+        FrontendService.FrontendServiceClient client,
+        CancellationToken token)
     {
-
-        //var response = await client.GetTicket();
-        //Console.WriteLine(response);
-        return TypedResults.Ok();
+        GetTicketRequest ticket = new GetTicketRequest { TicketId = id };
+        var response = await client.GetTicketAsync(ticket, cancellationToken: token);
+        if (response is not null)
+        {
+            return TypedResults.Ok(response);
+        }
+        
+        return TypedResults.NotFound();
     }
 
     static async Task<Results<Ok, NotFound>> DeleteTicket(string id, FrontendService.FrontendServiceClient client)

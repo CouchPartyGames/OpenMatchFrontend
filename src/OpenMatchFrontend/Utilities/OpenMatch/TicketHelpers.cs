@@ -1,6 +1,6 @@
 namespace OpenMatchFrontend.Utilities.OpenMatch;
 
-public class GetTicket
+public class TicketHelpers
 {
     
 }

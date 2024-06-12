@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.HttpLogging;
 using OpenMatchFrontend;
 using OpenMatchFrontend.Clients.OpenMatchFrontend;
+using OpenMatchFrontend.Clients.OpenMatchFrontend.Dependency;
 using OpenMatchFrontend.Endpoints;
 using OpenMatchFrontend.Exceptions;
 using OpenMatchFrontend.Observability;
 using OpenMatchFrontend.Observability.Dependency;
+using OpenMatchFrontend.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);   // .NET 8 
 //var builder = WebApplication.CreateSlimBuilder(args);   // .NET 8 + AOT
@@ -28,9 +30,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+//builder.Services.AddSignalR();
 
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -47,6 +49,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
 app.UseExceptionHandler(options => { });
 app.UseHttpLogging();
 app.MapHealthChecks(GlobalConsts.HealthPageUri);
+//app.MapHub<EventsHub>("/events");
 
 app.MapAuthenticationEndpoints();
 app.MapTicketEndpoints();
