@@ -34,9 +34,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Features\Tickets\CreateTicket\" />
-    <Folder Include="Features\Tickets\DeleteTicket\" />
-    <Folder Include="Features\Tickets\GetTicket\" />
     <Folder Include="SignalR\Groups\" />
     <Folder Include="SignalR\Hubs\Filters\" />
     <Folder Include="SignalR\Messages\" />

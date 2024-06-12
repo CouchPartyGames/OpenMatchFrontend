@@ -1,6 +1,6 @@
 namespace OpenMatchFrontend.Features.Tickets.DeleteTicket;
 
-public class Request
+public record DeleteTicketRequest
 {
     
 }

@@ -29,7 +29,7 @@ public static class TicketEndpoints
 
        
         var response = await client.CreateTicketAsync(request, cancellationToken: token);
-        Console.WriteLine(response);
+        //Console.WriteLine("Reresponse);
         
         return TypedResults.Ok(response.Id);
     }

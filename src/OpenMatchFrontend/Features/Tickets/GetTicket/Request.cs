@@ -1,6 +1,6 @@
 namespace OpenMatchFrontend.Features.Tickets.GetTicket;
 
-public class Request
+public record GetTicketRequest
 {
     
 }
