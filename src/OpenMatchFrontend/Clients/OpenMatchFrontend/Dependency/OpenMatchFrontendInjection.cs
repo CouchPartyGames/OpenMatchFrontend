@@ -7,15 +7,15 @@ public static class OpenMatchFrontendInjection
 
     public static IServiceCollection AddOpenMatchFrontendClient(this IServiceCollection services,
         IConfiguration configuration)
-    {
-        var options = configuration
-            .GetSection(OpenMatchOptions.SectionName)
-            .Get<OpenMatchOptions>();
+    { 
+        services.Configure<OpenMatchOptions>(
+            configuration.GetSection(OpenMatchOptions.SectionName));
         
         services
             .AddGrpcClient<FrontendService.FrontendServiceClient>(o =>
             {
-                var address = configuration["OPENMATCH_FRONTEND_HOST"] ??
+                var frontend = configuration.Get<OpenMatchOptions>().FrontendServiceAddress;
+                var address = frontend ??
                               OpenMatchOptions.OpenMatchFrontendDefaultAddress;
                 o.Address = new Uri(address);
             })
@@ -32,7 +32,7 @@ public static class OpenMatchFrontendInjection
             .AddInterceptor<ClientLoggerInterceptor>(InterceptorScope.Client)
             .AddStandardResilienceHandler();
         
-        services.AddTransient<ClientLoggerInterceptor>();
+        services.AddSingleton<ClientLoggerInterceptor>();
         
         return services;
     }
