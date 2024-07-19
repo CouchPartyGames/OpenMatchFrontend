@@ -25,7 +25,7 @@ public static class MetricsInjection
                     .AddAspNetCoreInstrumentation();
                 metricBuilder.AddOtlpExporter(export =>
                 {
-                    export.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultEndpoint);
+                    export.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultHost);
                     export.Protocol = OtlpExportProtocol.Grpc;
                 });
             });

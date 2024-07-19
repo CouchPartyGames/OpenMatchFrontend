@@ -23,7 +23,7 @@ public static class LoggingInjection
             opts.SetResourceBuilder(resourceBuilder);
             opts.AddOtlpExporter(export =>
             {
-                export.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultEndpoint);
+                export.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultHost);
                 export.Protocol = OtlpExportProtocol.Grpc;
             });
         });

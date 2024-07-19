@@ -26,7 +26,7 @@ public static class TracingInjection
 
                 traceBuilder.AddOtlpExporter(opts =>
                 {
-                    opts.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultEndpoint);
+                    opts.Endpoint = new Uri(OpenTelemetryOptions.OtelDefaultHost);
                     opts.Protocol = OtlpExportProtocol.Grpc;
                 });
             });
